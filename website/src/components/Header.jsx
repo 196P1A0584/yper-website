@@ -7,7 +7,7 @@ const mainLinks = [
   { label: "Platform", to: "/platform" },
   { label: "Health Initiative", to: "/health-initiative" },
   { label: "Customers", to: "/customers" },
-  { label: "About Us", to: "/about-us" },
+  { label: "About Us", to: "/about" },
 ];
 
 export default function Header() {

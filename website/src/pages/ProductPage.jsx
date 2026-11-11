@@ -150,7 +150,7 @@ function ProductSection({ product }) {
 
       <section className="product-detail demo-detail" id="book-demo">
         <div className="detail-heading"><p className="eyebrow">LET’S CONNECT</p><h2>Book a {product.name} demo</h2><p>Tell us what you’re exploring. This form is not connected to a submission service, so your details will not be sent.</p></div>
-        <DemoForm />
+        <DemoForm selectedProduct={product.name} />
       </section>
 
       <section className="product-detail call-detail" id="call-us">

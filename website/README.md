@@ -23,9 +23,10 @@ Create a production build with `npm run build`; preview it with `npm run preview
 - `/products/yperhealthhub`
 - `/products/yperscribe`
 - `/products/ypercare`
+- `/products/health-atm`
 
 Product, company, customer, pricing, technical, security, and contact details that
 were not supplied are identified in the interface as requiring confirmation.
 The demo form validates input locally but does not submit or store it; connect an
-approved backend before accepting requests. Hero and product visuals are CSS
-illustrations; approved Yper photography, logos, and video can replace them later.
+approved backend before accepting requests. The Health ATM page uses official
+YPER images; an approved overview video has not been supplied.
