@@ -1,6 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const initialForm = {
+const productOptions = [
+  "YperScribe",
+  "YperMD",
+  "YperHIS",
+  "YperHealthHub",
+  "YperCare",
+  "Health ATM",
+  "YPER CarePod",
+  "YPER CarePod Wall",
+  "YPER Kit",
+];
+
+const createInitialForm = (product = "") => ({
   name: "",
   email: "",
   countryCode: "+91",
@@ -11,17 +24,24 @@ const initialForm = {
   pincode: "",
   state: "",
   country: "",
+  product,
   demoStartDate: "",
   demoEndDate: "",
   message: "",
   privacyConsent: false,
   humanCheck: false,
-};
+});
 
-export default function DemoForm() {
-  const [form, setForm] = useState(initialForm);
+export default function DemoForm({ selectedProduct = "" }) {
+  const [form, setForm] = useState(() => createInitialForm(selectedProduct));
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (selectedProduct) {
+      setForm((current) => ({ ...current, product: selectedProduct }));
+    }
+  }, [selectedProduct]);
 
   const update = (event) => {
     const { name, value, type, checked } = event.target;
@@ -74,7 +94,7 @@ export default function DemoForm() {
             aria-describedby="phone-help"
             required
           />
-          {/* <span className="field-help" id="phone-help">Enter the number without the country code.</span> */}
+          <span className="field-help" id="phone-help">Enter the number without the country code.</span>
         </label>
         <label>
           Organization Type *
@@ -116,6 +136,13 @@ export default function DemoForm() {
           Country *
           <input autoComplete="country-name" name="country" value={form.country} onChange={update} required />
         </label>
+        <label className="form-full">
+          Product of Interest *
+          <select name="product" value={form.product} onChange={update} required>
+            <option value="">Select a product</option>
+            {productOptions.map((product) => <option key={product}>{product}</option>)}
+          </select>
+        </label>
         <label>
           Demo Start Date *
           <input type="date" name="demoStartDate" value={form.demoStartDate} onChange={update} required />
@@ -126,12 +153,13 @@ export default function DemoForm() {
         </label>
         <label className="form-full">
           Message
-          <textarea name="message" rows="4" value={form.message} onChange={update} />
+          <textarea name="message" rows="4" value={form.message} onChange={update} aria-describedby="message-help" />
+          <span className="field-help" id="message-help">Do not include patient health information.</span>
         </label>
         <div className="form-full form-checks">
           <label className="form-check">
             <input type="checkbox" name="privacyConsent" checked={form.privacyConsent} onChange={update} required />
-            <span>I agree to the processing of this information as described in the <a href="https://www.yper.in/privacy" target="_blank" rel="noreferrer">privacy notice</a>.</span>
+            <span>I agree to the processing of this information as described in the <Link to="/privacy">privacy notice</Link>.</span>
           </label>
           <label className="form-check">
             <input type="checkbox" name="humanCheck" checked={form.humanCheck} onChange={update} required />
@@ -141,7 +169,7 @@ export default function DemoForm() {
       </div>
       <div className="form-submit-row">
         <button className="button" type="submit" disabled={isLoading}>{isLoading ? "Checking…" : "Request a Demo"} {!isLoading && <span aria-hidden="true">→</span>}</button>
-        {/* <p className="form-note">The form is a frontend preview and does not transmit or store information.</p> */}
+        <p className="form-note">This preview does not send or store information. Do not include patient health information.</p>
       </div>
       {status && <p className={`form-status${status.startsWith("error:") ? " is-error" : ""}`} role="status">{status.replace(/^error: /, "")}</p>}
     </form>

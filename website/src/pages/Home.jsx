@@ -103,7 +103,7 @@ export default function Home() {
               <div><Icon kind="shield" /><span>Preventive<br />Health</span></div>
             </div>
             <div className="hero-actions">
-              <Link className="button" to="/products/yperhealthhub">Explore the Health ATM <span aria-hidden="true">→</span></Link>
+              <Link className="button" to="/products/health-atm">Explore the Health ATM <span aria-hidden="true">→</span></Link>
               <a className="video-link" href="#who-it-serves"><span className="play-icon">▶</span> Discover Yper</a>
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function Home() {
             <span className="pill-label"><Icon kind="heart" /> AVAILABLE TESTS</span>
             <h2>Key Health Indicators <em>at Your Fingertips</em></h2>
             <p>The Yper Health ATM concept brings together non-invasive screening and measurement capabilities. Specific available tests depend on final product configuration and require confirmation.</p>
-            <Link className="button" to="/products/yperhealthhub">Explore HealthHub <span aria-hidden="true">→</span></Link>
+            <Link className="button" to="/products/health-atm#tests">Explore Health ATM <span aria-hidden="true">→</span></Link>
             <div className="mini-values"><span><Icon kind="shield" />Considered<br />approach</span><span><Icon kind="people" />Designed for<br />access</span><span><Icon kind="heart" />Preventive<br />focus</span></div>
           </div>
           <div className="indicator-list">
@@ -173,7 +173,12 @@ export default function Home() {
           <div className="product-grid">
             {products.map((product, index) => (
               <article className="product-card" key={product.slug}>
-                <div className={`product-card-art product-art-${index}`}><AbstractVisual variant={`product-visual-${index}`} /><span className="product-number">0{index + 1}</span></div>
+                <div className={`product-card-art product-art-${(index % 4) + 1}`}>
+                  {product.slug === "health-atm"
+                    ? <img className="product-card-image" src="https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2Fyper-kiosk-front.webp&w=384&q=75" alt="YPER CarePod health screening kiosk concept." loading="lazy" />
+                    : <AbstractVisual variant={`product-visual-${index}`} />}
+                  <span className="product-number">0{index + 1}</span>
+                </div>
                 <div className="product-card-body">
                   <p className="eyebrow">{product.audience}</p>
                   <h3>{product.name}</h3>

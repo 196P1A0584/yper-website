@@ -194,4 +194,15 @@ export const products = [
     ],
     visualLabel: "Patient care workspace",
   },
+  {
+    slug: "health-atm",
+    name: "Health ATM",
+    audience: "Connected health screening",
+    description: "A guided screening visit in one private pod.",
+    tagline: "HEALTH ATM",
+    headline: "A Clinic's First Hour, in One Private Pod.",
+    overview: "A guided screening visit can bring supported measurements and a connected next step into one private place. What the pod includes, and whether a clinician is available, depends on the confirmed configuration.",
+    visual: "atm",
+    visualLabel: "Health ATM concept",
+  },
 ];
