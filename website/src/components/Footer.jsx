@@ -46,7 +46,7 @@ export default function Footer() {
       <div className="container footer-main">
         <div className="footer-about">
           <a className="footer-logo" href="/" aria-label="YPER home">
-            <img src="https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2FYPER-Logo.png&w=256&q=75" alt="YPER" />
+            <img src="/yper-logo.png" alt="" />
           </a>
           <p>YPER connects supported screening, consultations, and follow-up through a guided Health ATM experience. What a site includes depends on the devices and care pathways configured for that deployment.</p>
         </div>

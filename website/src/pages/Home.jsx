@@ -66,7 +66,7 @@ function TrustStrip() {
             <span><strong>{title}</strong><small>{detail}</small></span>
           </div>
         ))}
-        <div className="trust-brand"><strong>YPER</strong><small>Bring Your Health Into Focus.</small></div>
+        <div className="trust-brand"><img src="/yper-logo.png" alt="" /><small>Bring Your Health Into Focus.</small></div>
       </div>
     </div>
   );
@@ -159,8 +159,8 @@ export default function Home() {
           <div className="indicator-device">
             <div className="mini-kiosk">
               <div className="mini-camera" />
-              <div className="mini-screen"><b>YPER</b><span>Select test</span><div>♡　⌁　✓</div><div>◉　♧　◎</div></div>
-              <strong>YPER</strong>
+              <div className="mini-screen"><img className="mini-screen-brand" src="/yper-logo.png" alt="" /><span>Select test</span><div>♡　⌁　✓</div><div>◉　♧　◎</div></div>
+              <img className="mini-kiosk-brand" src="/yper-logo.png" alt="" />
             </div>
             <span className="device-glow" />
           </div>

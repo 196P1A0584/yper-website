@@ -32,10 +32,19 @@ const createInitialForm = (product = "") => ({
   humanCheck: false,
 });
 
+const formatDate = (date) => [
+  date.getFullYear(),
+  String(date.getMonth() + 1).padStart(2, "0"),
+  String(date.getDate()).padStart(2, "0"),
+].join("-");
+
 export default function DemoForm({ selectedProduct = "" }) {
   const [form, setForm] = useState(() => createInitialForm(selectedProduct));
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const today = new Date();
+  const minDemoDate = formatDate(today);
+  const maxDemoDate = `${today.getFullYear() + 1}-12-31`;
 
   useEffect(() => {
     if (selectedProduct) {
@@ -45,15 +54,19 @@ export default function DemoForm({ selectedProduct = "" }) {
 
   const update = (event) => {
     const { name, value, type, checked } = event.target;
-    setForm((current) => ({ ...current, [name]: type === "checkbox" ? checked : value }));
+    const updatedValue = name === "phone" ? value.replace(/\D/g, "").slice(0, 10) : value;
+    setForm((current) => ({ ...current, [name]: type === "checkbox" ? checked : updatedValue }));
     setStatus("");
   };
 
   const submit = async (event) => {
     event.preventDefault();
-    const phoneDigits = form.phone.replace(/\D/g, "");
-    if (phoneDigits.length < 7 || phoneDigits.length > 15) {
-      setStatus("Enter a phone number containing 7 to 15 digits.");
+    if (!/^\d{10}$/.test(form.phone)) {
+      setStatus("Enter a phone number containing exactly 10 digits.");
+      return;
+    }
+    if (!form.email.includes("@")) {
+      setStatus("Enter an email address containing @.");
       return;
     }
     if (form.demoEndDate < form.demoStartDate) {
@@ -71,33 +84,35 @@ export default function DemoForm({ selectedProduct = "" }) {
     <form className="demo-form" onSubmit={submit}>
       <div className="form-grid">
         <label>
-          Full Name *
+          <span className="field-label">Full Name <span className="required-indicator">*</span></span>
           <input autoComplete="name" name="name" value={form.name} onChange={update} required />
         </label>
         <label>
-          Email Address *
-          <input autoComplete="email" name="email" type="email" value={form.email} onChange={update} required />
+          <span className="field-label">Email Address <span className="required-indicator">*</span></span>
+          <input autoComplete="email" name="email" type="email" pattern={"[^@\\s]+@[^@\\s]+"} value={form.email} onChange={update} required />
         </label>
         <label>
-          Country Code *
+          <span className="field-label">Country Code <span className="required-indicator">*</span></span>
           <input name="countryCode" type="tel" pattern={"\\+[0-9]{1,4}"} value={form.countryCode} onChange={update} placeholder="+91" required />
         </label>
         <label>
-          Phone Number *
+          <span className="field-label">Phone Number <span className="required-indicator">*</span></span>
           <input
             autoComplete="tel-national"
             name="phone"
             type="tel"
-            pattern={"[0-9\\s().-]{7,20}"}
+            inputMode="numeric"
+            pattern="[0-9]{10}"
+            maxLength={10}
             value={form.phone}
             onChange={update}
             aria-describedby="phone-help"
             required
           />
-          <span className="field-help" id="phone-help">Enter the number without the country code.</span>
+          
         </label>
         <label>
-          Organization Type *
+          <span className="field-label">Organization Type <span className="required-indicator">*</span></span>
           <select autoComplete="organization" name="organizationType" value={form.organizationType} onChange={update} required>
             <option value="">Select organization type</option>
             <option>Hospital or health system</option>
@@ -110,7 +125,7 @@ export default function DemoForm({ selectedProduct = "" }) {
           </select>
         </label>
         <label>
-          No. of Kiosks or Deployment Scale *
+          <span className="field-label">No. of Kiosks or Deployment Scale <span className="required-indicator">*</span></span>
           <select name="deploymentScale" value={form.deploymentScale} onChange={update} required>
             <option value="">Select deployment scale</option>
             <option>Pilot - 1 kiosk</option>
@@ -121,35 +136,35 @@ export default function DemoForm({ selectedProduct = "" }) {
           </select>
         </label>
         <label>
-          City *
+          <span className="field-label">City <span className="required-indicator">*</span></span>
           <input autoComplete="address-level2" name="city" value={form.city} onChange={update} required />
         </label>
         <label>
-          Pincode *
+          <span className="field-label">Pincode <span className="required-indicator">*</span></span>
           <input autoComplete="postal-code" name="pincode" value={form.pincode} onChange={update} required />
         </label>
         <label>
-          State *
+          <span className="field-label">State <span className="required-indicator">*</span></span>
           <input autoComplete="address-level1" name="state" value={form.state} onChange={update} required />
         </label>
         <label>
-          Country *
+          <span className="field-label">Country <span className="required-indicator">*</span></span>
           <input autoComplete="country-name" name="country" value={form.country} onChange={update} required />
         </label>
         <label className="form-full">
-          Product of Interest *
+          <span className="field-label">Product of Interest <span className="required-indicator">*</span></span>
           <select name="product" value={form.product} onChange={update} required>
             <option value="">Select a product</option>
             {productOptions.map((product) => <option key={product}>{product}</option>)}
           </select>
         </label>
         <label>
-          Demo Start Date *
-          <input type="date" name="demoStartDate" value={form.demoStartDate} onChange={update} required />
+          <span className="field-label">Demo Start Date <span className="required-indicator">*</span></span>
+          <input type="date" name="demoStartDate" min={minDemoDate} max={maxDemoDate} value={form.demoStartDate} onChange={update} required />
         </label>
         <label>
-          Demo End Date *
-          <input type="date" name="demoEndDate" min={form.demoStartDate || undefined} value={form.demoEndDate} onChange={update} required />
+          <span className="field-label">Demo End Date <span className="required-indicator">*</span></span>
+          <input type="date" name="demoEndDate" min={form.demoStartDate || minDemoDate} max={maxDemoDate} value={form.demoEndDate} onChange={update} required />
         </label>
         <label className="form-full">
           Message
