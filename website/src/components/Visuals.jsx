@@ -29,12 +29,12 @@ export function KioskVisual() {
       <div className="kiosk">
         <div className="kiosk-camera"><i /><i /><i /></div>
         <div className="kiosk-screen">
-          <span className="screen-brand">YPER</span>
+          <img className="screen-brand" src="/yper-logo.png" alt="" />
           <small>Your Health<br />Our Priority</small>
           <span className="screen-cta">Start Health Check</span>
           <div className="screen-icons"><b>♡</b><b>⌁</b><b>✓</b></div>
         </div>
-        <strong>YPER</strong>
+        <img className="kiosk-brand" src="/yper-logo.png" alt="" />
         <small>Health ATM</small>
       </div>
       <div className="person patient"><i className="person-head" /><i className="person-body" /><i className="person-arm" /></div>
