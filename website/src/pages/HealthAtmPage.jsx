@@ -1,41 +1,44 @@
 import { useState } from "react";
 import DemoForm from "../components/DemoForm.jsx";
 import { Icon } from "../components/Visuals.jsx";
+import { media } from "../data/media.js";
 
 const productCards = [
   {
     name: "YPER CarePod",
     description: "Standalone, private pod for hospitals, malls and community centres.",
-    image: "https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2Fyper-kiosk-front.webp&w=828&q=75",
+    image: media.carePod,
     alt: "Concept visualization of a freestanding YPER health kiosk with a touchscreen and blood-pressure cuff.",
   },
   {
     name: "YPER CarePod Wall",
     description: "Wall-mounted unit for clinics, pharmacies and workplaces.",
-    image: "https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2Fwall-mounted-kiosk.webp&w=828&q=75",
+    image: media.wallCarePod,
     alt: "Concept visualization of a wall-mounted YPER health kiosk with a touchscreen, blood-pressure cuff, and handheld sensor.",
   },
   {
     name: "YPER Kit",
     description: "Portable tablet, BP cuff, pulse oximeter and thermometer for health workers.",
-    image: "https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2Fportable-health-kit.webp&w=828&q=75",
+    image: media.healthKit,
     alt: "Concept visualization of an open YPER portable health kit with a tablet, blood-pressure cuff, pulse oximeter, and thermometer.",
   },
 ];
 
 const visitSteps = [
-  ["CHECK IN", "Mobile number, ABHA or Yper Health Card. Choose English, Telugu or Hindi.", "people"],
-  ["GET CHECKED", "Supported vitals such as blood pressure, pulse, oxygen saturation, temperature, and weight, plus ECG and other tests included in that configuration.", "pulse"],
-  ["SEE IT CLEARLY", "Results on screen and on your phone, in plain language.", "check"],
-  ["TALK TO A SPECIALIST", "A live video consult with a registered doctor from a partner hospital, plus an e-prescription or referral if needed.", "building"],
+  ["CHECK IN", "Mobile number, ABHA or Yper Health Card. Choose English, Telugu or Hindi.", "people", media.healthAtmStep1],
+  ["GET CHECKED", "Supported vitals such as blood pressure, pulse, oxygen saturation, temperature, and weight, plus ECG and other tests included in that configuration.", "pulse", media.healthAtmStep2],
+  ["SEE IT CLEARLY", "Results on screen and on your phone, in plain language.", "check", media.healthAtmStep3],
+  ["TALK TO A SPECIALIST", "A live video consult with a registered doctor from a partner hospital, plus an e-prescription or referral if needed.", "building", media.healthAtmStep4],
   ["FOLLOW UP", "Reminders, and records shared with the care team you choose.", "heart"],
 ];
 
 const insideGroups = [
-  ["MEASURE", "Supported measurements and devices depend on the confirmed setup.", [
-    "Supported vital measurements.",
+  ["MEASURE", "Choose the measurements and devices that fit each site.", [
+    "Blood pressure, heart rate and ECG.",
+    "Body temperature, oxygen saturation and blood glucose.",
+    "Body composition and other configured measurements.",
+    "Vision and hearing checks where supported.",
     "Configured monitoring devices.",
-    "Measurements available in the connected care record.",
     "12-lead ECG recording reviewed by a doctor when that workflow is configured.",
     "Connected examination devices where included in the setup.",
   ], "pulse"],
@@ -82,7 +85,7 @@ export default function HealthAtmPage() {
             </div>
           </div>
           <div className="atm-hero-image">
-            <img src={productCards[0].image} alt={productCards[0].alt} fetchPriority="high" />
+            <img src={media.healthAtmHero} alt="A woman using a YPER Health ATM with a clinician beside her." fetchPriority="high" />
             <span>YPER HEALTH ATM · CONCEPT VISUAL</span>
           </div>
         </div>
@@ -117,8 +120,9 @@ export default function HealthAtmPage() {
             <h2>From hazy to clear, in five steps.</h2>
           </div>
           <div className="atm-steps">
-            {visitSteps.map(([title, copy, icon], index) => (
+            {visitSteps.map(([title, copy, icon, image], index) => (
               <article className="atm-step" key={title}>
+                {image && <img className="atm-step-image" src={image} alt="" loading="lazy" />}
                 <span className="atm-step-marker"><Icon kind={icon} /><b>0{index + 1}</b></span>
                 <div><h3>{title}</h3><p>{copy}</p></div>
               </article>
@@ -143,6 +147,10 @@ export default function HealthAtmPage() {
                 <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul>
               </article>
             ))}
+          </div>
+          <div className="atm-tests-visual">
+            <img src={media.healthAtmTests} alt="A person selecting a screening service on a YPER Health ATM." loading="lazy" />
+            <span>Choose from services enabled for the site</span>
           </div>
         </div>
       </section>

@@ -1,0 +1,26 @@
+const image = (filename) => `${import.meta.env.BASE_URL}images/customers/${filename}`;
+
+export const customers = [
+  { name: "Sonoclinic Diagnostic Center - Pimpri", logo: image("customer-01.png") },
+  { name: "Aarogya Pathology Labs and X-ray", logo: image("customer-02.png") },
+  { name: "Nahar Medical Center LLP", logo: image("customer-03.png") },
+  { name: "Shri Shyam Hospital", logo: image("customer-04.png") },
+  { name: "Gemini Heart & Emergency Care", logo: image("customer-05.png") },
+  { name: "Rajrit Healthcare Services", logo: image("customer-06.png") },
+  { name: "Wellness Laboratories", logo: image("customer-07.jpg") },
+  { name: "Bharati Diagnostics", logo: image("customer-08.png") },
+  { name: "Guru Nanak Medical Foundation", logo: image("customer-09.png") },
+  { name: "Nakoda Bhairav Foundation Charitable Trust", logo: image("customer-10.jpg") },
+  { name: "Next Gen Health & Wellness", logo: image("customer-11.png") },
+  { name: "Nikhil Hospitals", logo: image("customer-12.jpeg") },
+  { name: "SVH Speciality Hospital", logo: image("customer-13.png") },
+  { name: "Balaji Hospitals and Diabetes Centre", logo: image("customer-14.jpg") },
+  { name: "Orthocare Tezpur Pvt. Ltd.", logo: image("customer-15.jpg") },
+  { name: "Shree Siddhivinayak Nursing Home", logo: image("customer-16.png") },
+  { name: "NJSM Diagnostics Veerayatan", logo: image("customer-17.png") },
+  { name: "Indo US Hospital", logo: image("customer-18.png") },
+  { name: "Neo TrueNorth Hospitals", logo: image("customer-19.png") },
+  { name: "Global Hospital", logo: image("customer-20.png") },
+  { name: "Privy Wellness Clinic", logo: image("customer-21.png") },
+  { name: "FAH Superspeciality Hospitals", logo: image("customer-22.jpeg") },
+];

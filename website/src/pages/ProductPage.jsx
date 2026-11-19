@@ -2,6 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import DemoForm from "../components/DemoForm.jsx";
 import { AbstractVisual, Icon, KioskVisual } from "../components/Visuals.jsx";
 import { products } from "../data/products.js";
+import { allProductDetails } from "../data/platformProducts.js";
+import { media } from "../data/media.js";
 
 const sections = [
   ["overview", "Overview"],
@@ -13,14 +15,36 @@ const sections = [
   ["features", "Features"],
   ["why-us", "Why Us"],
   ["book-demo", "Book a Demo"],
-  ["call-us", "Call Us"],
+  ["contact", "Contact"],
 ];
 
 function ProductVisual({ product }) {
   if (product.visual === "hub") return <KioskVisual />;
+  if (product.visual === "care") {
+    return (
+      <div className="care-product-visual">
+        <img src={media.careVisit} alt="A person using a phone to explore healthcare services." />
+        <span>Care access designed around you</span>
+      </div>
+    );
+  }
 
   const rows = product.visual === "scribe"
     ? [["SUBJECTIVE", "Consultation notes"], ["OBJECTIVE", "Clinical observations"], ["ASSESSMENT", "Review with clinician"], ["PLAN", "Next steps"]]
+    : product.visual === "lab"
+      ? [["Test catalog", "Configured services"], ["Specimens", "Sample tracking"], ["Analyzers", "Connected results"], ["Reports", "TAT overview"]]
+      : product.visual === "doc"
+        ? [["Patient intake", "Reported concerns"], ["Language", "Configured support"], ["Case summary", "Draft for review"], ["Care team", "Next steps"]]
+        : product.visual === "life"
+          ? [["Consultation", "Care milestones"], ["Laboratory", "Embryology workflows"], ["Locations", "Connected teams"], ["Follow-up", "Treatment journey"]]
+          : product.visual === "surge"
+            ? [["Theatre schedule", "Rooms and teams"], ["Equipment", "Supply tracking"], ["Checklist", "Procedure workflow"], ["Operations", "Activity overview"]]
+            : product.visual === "buddy"
+              ? [["Ask a question", "General information"], ["Explore", "Care options"], ["Language", "Configured support"], ["Next step", "Professional care"]]
+              : product.visual === "assistant"
+                ? [["Virtual assistant", "Service information"], ["Clinical support", "Human review"], ["Avatar", "Conversation mode"], ["Documentation", "Draft workflow"]]
+                : product.visual === "pharmacy"
+                  ? [["Indent", "Requests and issues"], ["Inventory", "Stock levels"], ["Dispensing", "Barcode workflow"], ["Expiry", "FEFO tracking"]]
     : product.visual === "hospital"
       ? [["Emergency", "Patient flow"], ["Inpatient", "Bed overview"], ["Diagnostics", "Orders & results"], ["Operations", "Daily summary"]]
       : product.visual === "clinic"
@@ -76,8 +100,57 @@ function WorkflowPreview({ product }) {
           </article>
         ))}
       </div>
-      <div className="workflow-note"><Icon kind="check" /><span>Illustrative workflow based on the supplied reference brief. Yper availability must be confirmed.</span></div>
+      <div className="workflow-note"><Icon kind="check" /><span>Workflow steps and included services can vary by plan and care setting.</span></div>
     </div>
+  );
+}
+
+function ProductResults({ product }) {
+  if (!product.results?.length) return null;
+
+  return (
+    <section className="product-detail product-results" aria-label={`${product.name} reported results`}>
+      <div className="product-results-heading">
+        <p className="eyebrow">AT A GLANCE</p>
+        <h2>More time for better care.</h2>
+        <p>Reported outcomes and service highlights from the supplied product references.</p>
+      </div>
+      <div className="product-results-grid">
+        {product.results.map(([value, label]) => (
+          <article key={label}><strong>{value}</strong><span>{label}</span></article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProductPricing({ product }) {
+  const plans = product.pricingPlans || [];
+
+  return (
+    <section className="product-detail product-pricing" id="pricing">
+      <div className="pricing-copy"><p className="eyebrow">PRICING</p><h2>{plans.length ? "Plans for the way you work." : "Ask about current options."}</h2><p>{plans.length ? "Choose a plan that fits your practice or organization. Hospital and device configurations may affect the final proposal." : "Pricing was not listed in the supplied product reference. Contact Yper for current options."}</p><a className="button" href="#book-demo">Discuss your requirements <span aria-hidden="true">→</span></a></div>
+      <div className={`pricing-plan-grid pricing-plan-count-${Math.max(plans.length, 1)}`}>
+        {plans.length ? plans.map((plan) => (
+          <article className={`pricing-plan${plan.featured ? " is-featured" : ""}`} key={plan.name}>
+            {plan.featured && <span className="pricing-plan-badge">POPULAR</span>}
+            <p className="eyebrow">{plan.name}</p>
+            <strong className="pricing-plan-price">{plan.price}</strong>
+            <span className="pricing-plan-period">{plan.period}</span>
+            <p>{plan.description}</p>
+            <ul>{plan.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+          </article>
+        )) : (
+          <article className="pricing-plan">
+            <p className="eyebrow">PRICING DETAILS</p>
+            <strong className="pricing-plan-price">Contact Yper</strong>
+            <span className="pricing-plan-period">for current options</span>
+            <p>Pricing was not listed in the supplied product reference.</p>
+            <a className="text-link" href="#book-demo">Request details <span aria-hidden="true">→</span></a>
+          </article>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -90,9 +163,8 @@ function ProductSection({ product }) {
           <p className="product-tagline">{product.tagline}</p>
           <h1>{product.headline}</h1>
           <p className="product-hero-description">{product.overview}</p>
-          <p className="reference-disclaimer">Reference-led draft. Product availability and capabilities require confirmation from Yper.</p>
           <div className="product-hero-actions">
-            <a className="button" href="#book-demo">{product.slug === "yperhis" ? "Book a Demo" : product.slug === "ypercare" ? "Explore Care" : "Start Now"}<span aria-hidden="true">→</span></a>
+            <a className="button" href="#book-demo">{product.ctaLabel || (product.slug === "yperhis" ? "Book a Demo" : product.slug === "ypercare" ? "Explore Care" : "Start Now")}<span aria-hidden="true">→</span></a>
             <a className="text-link" href="#key-features">Learn More <span aria-hidden="true">↓</span></a>
           </div>
         </div>
@@ -105,38 +177,37 @@ function ProductSection({ product }) {
         </div>
       </section>
 
+      <ProductResults product={product} />
+
       <section className="product-detail product-features-section" id="key-features">
-        <PageHeading eyebrow={`${product.name} · CAPABILITIES`} title={<>Key features for <em>{product.audience.toLowerCase()}.</em></>} copy="These product-specific capabilities are drawn from the supplied reference brief. Confirm availability and exact behavior with Yper before publication or use." />
+        <PageHeading eyebrow={`${product.name} · CAPABILITIES`} title={<>Key features for <em>{product.audience.toLowerCase()}.</em></>} copy="Explore the tools and workflows included in the Yper product suite. Specific modules and integrations depend on the plan and deployment." />
         <FeatureGrid items={product.features} />
       </section>
 
       <section className="product-detail product-security" id="security-compliance">
         <div className="security-icon"><Icon kind="shield" /></div>
-        <div><p className="eyebrow">TRUST & SAFETY</p><h2>Security & Compliance</h2><p>Yper-specific security practices, certifications and regulatory status have not been verified for this product. No certification or compliance claim is made here.</p>
-          <div className="verification-chips">{["Privacy & data handling", "Access controls", "Audit records", "Encryption", "Applicable standards"].map((item) => <span key={item}><i />{item}: confirm with Yper</span>)}</div>
+        <div><p className="eyebrow">TRUST & SAFETY</p><h2>Security built for healthcare.</h2><p>Learn how YPER approaches privacy, security, and compliance for configured care pathways.</p>
+          <Link className="text-link" to="/why-yper">View security and compliance details <span aria-hidden="true">→</span></Link>
         </div>
       </section>
 
       <section className="product-detail product-specs" id="tech-specs">
-        <PageHeading eyebrow="TECHNICAL INFORMATION" title="Designed around the right setup." copy="The supplied reference describes the following areas. Yper-supported devices, integrations and deployment options still need technical confirmation." />
-        <div className="spec-list">{product.confirmations.map((item, index) => <div className="spec-row" key={item}><span>0{index + 1}</span><strong>{item}</strong><small>Needs confirmation</small></div>)}</div>
-        <p className="spec-note">No device compatibility, API behavior, hosting location or technical requirement is implied by this page.</p>
+        <PageHeading eyebrow="TECHNICAL INFORMATION" title="Designed for connected care." copy="Choose the modules, integrations, and deployment approach that fit your organization." />
+        <div className="spec-list">{product.specifications.map((item, index) => <div className="spec-row" key={item}><span>0{index + 1}</span><strong>{item}</strong><small>Configuration dependent</small></div>)}</div>
+        <p className="spec-note">Available integrations, devices, and deployment options depend on the selected configuration.</p>
       </section>
 
-      <section className="product-detail product-pricing" id="pricing">
-        <div className="pricing-copy"><p className="eyebrow">PRICING</p><h2>Let’s find the right fit.</h2><p>Yper-approved pricing has not been provided. Plan details and commercial terms are available from Yper on request.</p><a className="button" href="#book-demo">Contact Us for Pricing <span aria-hidden="true">→</span></a></div>
-        <div className="pricing-visual"><span className="pricing-mark">Y</span><strong>Custom discussion</strong><small>Scope and availability to confirm</small><div><span>Product fit</span><span>Implementation</span><span>Commercials</span></div></div>
-      </section>
+      <ProductPricing product={product} />
 
       <section className="product-detail product-solutions" id="solutions">
-        <PageHeading eyebrow="SOLUTIONS" title="Made for different care settings." copy={`Explore how ${product.name} may fit your organization. The use cases below reflect the supplied product brief and require Yper confirmation.`} />
+        <PageHeading eyebrow="SOLUTIONS" title="Made for different care settings." copy={`Explore how ${product.name} supports different care settings. The right modules and workflows depend on your organization's needs.`} />
         <div className="solution-list">{product.solutions.map((item, index) => <article key={item}><span>0{index + 1}</span><Icon kind={["people", "building", "heart", "pulse"][index % 4]} /><h3>{item}</h3><p>Discuss needs, scope and availability with Yper.</p></article>)}</div>
       </section>
 
       <section className="product-detail product-workflows" id="features">
-        <PageHeading eyebrow={`${product.name} · IN PRACTICE`} title="A clearer view of the workflow." copy="A closer look at the product-specific journeys described in the reference brief. These panels are visual concepts, not a working clinical system." />
+        <PageHeading eyebrow={`${product.name} · IN PRACTICE`} title="A clearer view of the workflow." copy="See how the product brings everyday tasks together. The interface below is an illustration, not a live system." />
         <div className="workflow-layout"><WorkflowPreview product={product} /><ProductVisual product={product} /></div>
-        {product.slug === "yperscribe" && <div className="mobile-benefit"><span className="mobile-benefit-icon"><Icon kind="pulse" /></span><div><p className="eyebrow">MOBILE WORKFLOW</p><h3>Documentation that can move with the clinician.</h3><p>Mobile applications, offline use, supported devices and app-store availability are unconfirmed. No download link is presented.</p></div></div>}
+        {product.slug === "yperscribe" && <div className="mobile-benefit"><span className="mobile-benefit-icon"><Icon kind="pulse" /></span><div><p className="eyebrow">MOBILE & WEB</p><h3>Documentation that moves with the clinician.</h3><p>Use mobile and web workflows, record consultations offline, and capture clinical images with native camera support.</p></div></div>}
         <div className="faq-block"><PageHeading eyebrow="QUESTIONS & ANSWERS" title="Frequently asked questions" copy="Answers are limited to information that can be responsibly stated today." /><div className="faq-list">{product.faqs.map(([question, answer]) => <details key={question}><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></div>
       </section>
 
@@ -153,9 +224,8 @@ function ProductSection({ product }) {
         <DemoForm selectedProduct={product.name} />
       </section>
 
-      <section className="product-detail call-detail" id="call-us">
-        <Icon kind="pulse" /><div><p className="eyebrow">CALL US</p><h2>We’d be glad to connect.</h2><p>Yper’s verified phone number is not available in the project materials. Contact details need confirmation.</p></div>
-        <span className="confirmation-badge">PHONE NUMBER TO CONFIRM</span>
+      <section className="product-detail call-detail" id="contact">
+        <Icon kind="mail" /><div><p className="eyebrow">CONTACT YPER</p><h2>We’d be glad to connect.</h2><p>For product questions and demo enquiries, email the YPER team.</p><a className="text-link" href="mailto:contact@yper.in">contact@yper.in <span aria-hidden="true">→</span></a></div>
       </section>
     </>
   );
@@ -163,7 +233,7 @@ function ProductSection({ product }) {
 
 export default function ProductPage() {
   const { slug } = useParams();
-  const product = products.find((item) => item.slug === slug);
+  const product = allProductDetails.find((item) => item.slug === slug);
   if (!product) return <main className="not-found container"><p className="eyebrow">PRODUCT NOT FOUND</p><h1>Explore the Yper product suite.</h1><Link className="button" to="/#products">View products <span aria-hidden="true">→</span></Link></main>;
 
   return (

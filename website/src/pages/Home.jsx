@@ -1,44 +1,56 @@
 import { Link } from "react-router-dom";
 import DemoForm from "../components/DemoForm.jsx";
-import { AbstractVisual, Icon, KioskVisual } from "../components/Visuals.jsx";
+import { AbstractVisual, Icon } from "../components/Visuals.jsx";
 import { products } from "../data/products.js";
+import { media } from "../data/media.js";
 
 const audiences = [
   {
     title: "Employers",
-    description: "Explore approaches to bringing accessible health screening closer to workplaces.",
+    description: "Screening and a clearer next step for people at work.",
     icon: "people",
-    tags: ["Workplace wellbeing", "Convenient access", "Preventive focus"],
+    image: media.overviewEmployers,
+    imageAlt: "A person in a clinical setting giving a thumbs-up.",
   },
   {
     title: "Communities",
-    description: "A welcoming health screening experience designed around local communities.",
+    description: "Basic health checks closer to where people already are.",
     icon: "heart",
-    tags: ["Community health", "Accessible care", "Connected support"],
+    image: media.overviewCommunities,
+    imageAlt: "A family spending time outdoors.",
   },
   {
     title: "Clinics & Hospitals",
-    description: "Discover how connected technology can support a more approachable care journey.",
+    description: "A private first step that can extend a clinic’s reach.",
     icon: "building",
-    tags: ["Digital health", "Connected technology", "Care teams"],
+    image: media.overviewClinics,
+    imageAlt: "A hospital building.",
   },
   {
     title: "Health Programmes",
-    description: "Explore flexible ways to bring health awareness into programmes and services.",
+    description: "A configurable screening point for outreach and larger programmes.",
     icon: "pulse",
-    tags: ["Health awareness", "Screening access", "Community focus"],
+    image: media.overviewProgrammes,
+    imageAlt: "A clinician wearing a mask at a health screening kiosk.",
   },
 ];
 
 const indicators = [
-  ["Blood Pressure", "Monitor your cardiovascular health", "pulse"],
-  ["Heart Rate & ECG", "Check your heart rhythm", "heart"],
-  ["Body Temperature", "Detect fever and illness", "pulse"],
-  ["Oxygen Saturation (SpO₂)", "Measure oxygen levels", "droplet"],
-  ["Blood Glucose", "Monitor diabetes risk", "droplet"],
-  ["Body Composition", "Track BMI, fat and muscle", "people"],
-  ["Vision & Hearing", "Check sensory health", "check"],
+  ["Blood Pressure", "Blood pressure measurement", "pulse"],
+  ["Heart Rate & ECG", "Heart rhythm screening, where configured", "heart"],
+  ["Body Temperature", "Temperature measurement", "pulse"],
+  ["Oxygen Saturation (SpO₂)", "Oxygen saturation measurement", "droplet"],
+  ["Blood Glucose", "Blood glucose screening", "droplet"],
+  ["Body Composition", "Body composition measurement", "people"],
+  ["Vision & Hearing", "Where supported", "check"],
   ["Additional Tests", "As per configuration", "check"],
+];
+
+const journeySteps = [
+  ["Register", "A quick and easy check-in process.", media.healthAtmStep1, "A hand pressing Start on a YPER touchscreen."],
+  ["Complete Screening", "Get your vital signs and key health parameters checked.", media.healthAtmStep2, "A clinician standing beside a YPER health kiosk."],
+  ["Review Results", "See your results through the appropriate secure interface.", media.healthAtmStep3, "A YPER health report displayed on a screen."],
+  ["Get Guidance", "Connect with a clinician when needed.", media.healthAtmStep4, "A clinician speaking with someone by video call."],
 ];
 
 function SectionHeading({ label, title, copy, centered = false }) {
@@ -53,9 +65,9 @@ function SectionHeading({ label, title, copy, centered = false }) {
 
 function TrustStrip() {
   const items = [
-    ["Security details pending", "Information requires confirmation", "shield"],
-    ["Accessible for All", "Health access for everyone", "people"],
-    ["Preventive Focus", "Stay healthier, longer", "heart"],
+    ["Guided screening", "A clear first step for health checks", "heart"],
+    ["Configured for your site", "Tests depend on the selected setup", "check"],
+    ["Connected care", "A clearer next step when needed", "people"],
   ];
   return (
     <div className="trust-wrap container">
@@ -66,7 +78,7 @@ function TrustStrip() {
             <span><strong>{title}</strong><small>{detail}</small></span>
           </div>
         ))}
-        <div className="trust-brand"><img src="/yper-logo.png" alt="" /><small>Bring Your Health Into Focus.</small></div>
+        <div className="trust-brand"><img src={`${import.meta.env.BASE_URL}yper-logo.png`} alt="" /><small>Bring Your Health Into Focus.</small></div>
       </div>
     </div>
   );
@@ -90,13 +102,13 @@ function DemoSection() {
 
 export default function Home() {
   return (
-    <main>
+    <main className="home-page">
       <section className="hero-section">
         <div className="container hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">YPER HEALTH <span /></p>
             <h1>Bring Your Health <em>Into Focus.</em></h1>
-            <p className="hero-description">Accessible health screening, connected technology and a clearer path to preventive health — through a guided Health ATM experience.</p>
+            <p className="hero-description">Guided Health ATM screening, connected technology, and a clearer next step for preventive care.</p>
             <div className="hero-benefits">
               <div><Icon kind="heart" /><span>Health<br />Screening</span></div>
               <div><Icon kind="people" /><span>Connected<br />Care</span></div>
@@ -107,7 +119,10 @@ export default function Home() {
               <a className="video-link" href="#who-it-serves"><span className="play-icon">▶</span> Discover Yper</a>
             </div>
           </div>
-          <KioskVisual />
+          <div className="home-hero-photo">
+            <img src={media.healthAtmHero} alt="A woman using a YPER Health ATM with a clinician beside her." fetchPriority="high" />
+            <span>Guided screening · connected care</span>
+          </div>
         </div>
         <TrustStrip />
       </section>
@@ -115,15 +130,14 @@ export default function Home() {
       <section className="audience-section section-pad" id="who-it-serves">
         <div className="container audience-layout">
           <div className="audience-main">
-            <SectionHeading label="WHO IT SERVES" title={<>Better Health for<br />Individuals and Communities</>} copy="Yper is designed to make healthcare more accessible, affordable and convenient for everyone — anytime, anywhere." />
+            <SectionHeading label="WHO IT SERVES" title={<>Better Health for<br />Individuals and Communities</>} />
             <div className="audience-grid">
-              {audiences.map((item, index) => (
+              {audiences.map((item) => (
                 <article className="audience-card" key={item.title}>
-                  <div className={`audience-art art-${index}`}><Icon kind={item.icon} /><span className="art-dot" /></div>
+                  <div className="audience-art"><img src={item.image} alt={item.imageAlt} loading="lazy" /><Icon kind={item.icon} /></div>
                   <div className="audience-card-copy">
                     <h3>{item.title}</h3>
                     <p>{item.description}</p>
-                    <ul>{item.tags.map((tag) => <li key={tag}><span>✓</span>{tag}</li>)}</ul>
                   </div>
                 </article>
               ))}
@@ -132,9 +146,9 @@ export default function Home() {
           <aside className="why-panel">
             <AbstractVisual variant="dark" />
             <p className="eyebrow">WHY YPER</p>
-            <h2>Accessible.<br /><em>Connected.</em></h2>
-            <p>Health journeys are personal. Yper brings screening and connected technology into a guided, approachable experience.</p>
-            <Link className="button button-light" to="/about-us">Why Yper <span aria-hidden="true">→</span></Link>
+            <h2>Trusted.<br /><em>Secure. Connected.</em></h2>
+            <p>YPER brings screening, privacy, and a clinician’s next step together. Explore the controls and credentials described for configured care pathways.</p>
+            <Link className="button button-light" to="/why-yper">Why YPER <span aria-hidden="true">→</span></Link>
             <div className="health-readout"><span><Icon kind="heart" /><b>Care</b></span><span><Icon kind="pulse" /><b>Focus</b></span><span><Icon kind="check" /><b>Clarity</b></span></div>
           </aside>
         </div>
@@ -146,7 +160,7 @@ export default function Home() {
             <p className="eyebrow">SMART HEALTH TECHNOLOGY</p>
             <span className="pill-label"><Icon kind="heart" /> AVAILABLE TESTS</span>
             <h2>Key Health Indicators <em>at Your Fingertips</em></h2>
-            <p>The Yper Health ATM concept brings together non-invasive screening and measurement capabilities. Specific available tests depend on final product configuration and require confirmation.</p>
+            <p>The YPER Health ATM can include a range of non-invasive screening and measurement capabilities. The available tests depend on the device configuration; results are screening information, not a diagnosis.</p>
             <Link className="button" to="/products/health-atm#tests">Explore Health ATM <span aria-hidden="true">→</span></Link>
             <div className="mini-values"><span><Icon kind="shield" />Considered<br />approach</span><span><Icon kind="people" />Designed for<br />access</span><span><Icon kind="heart" />Preventive<br />focus</span></div>
           </div>
@@ -154,35 +168,49 @@ export default function Home() {
             {indicators.map(([title, description, icon]) => (
               <div className="indicator" key={title}><Icon kind={icon} /><span><strong>{title}</strong><small>{description}</small></span></div>
             ))}
-            <small className="confirmation-note">Illustrative tests shown in the supplied Yper design reference; confirm availability before publication.</small>
+            <small className="confirmation-note">Available tests vary by Health ATM configuration. Screening information is not a diagnosis.</small>
           </div>
           <div className="indicator-device">
             <div className="mini-kiosk">
               <div className="mini-camera" />
-              <div className="mini-screen"><img className="mini-screen-brand" src="/yper-logo.png" alt="" /><span>Select test</span><div>♡　⌁　✓</div><div>◉　♧　◎</div></div>
-              <img className="mini-kiosk-brand" src="/yper-logo.png" alt="" />
+              <div className="mini-screen"><img className="mini-screen-brand" src={`${import.meta.env.BASE_URL}yper-logo.png`} alt="" /><span>Select test</span><div>♡　⌁　✓</div><div>◉　♧　◎</div></div>
+              <img className="mini-kiosk-brand" src={`${import.meta.env.BASE_URL}yper-logo.png`} alt="" />
             </div>
             <span className="device-glow" />
           </div>
         </div>
       </section>
 
+      <section className="home-journey-section section-pad">
+        <div className="container">
+          <SectionHeading label="HOW IT WORKS" title="Your Health Journey, Simplified" copy="A guided visit makes it easier to check in, complete screening, review results, and connect with a clinician when needed." centered />
+          <div className="home-journey-grid">
+            {journeySteps.map(([title, copy, image, alt], index) => (
+              <article className="home-journey-card" key={title}>
+                <img src={image} alt={alt} loading="lazy" />
+                <div><span>0{index + 1}</span><h3>{title}</h3><p>{copy}</p></div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="products-section section-pad" id="products">
         <div className="container">
-          <SectionHeading label="THE YPER SUITE" title="Technology for a more connected health journey" copy="Explore the Yper product suite. Product-specific capabilities and availability are being confirmed." centered />
+          <SectionHeading label="THE YPER SUITE" title="Technology for a more connected health journey" copy="From clinical documentation and clinic operations to community screening, explore the tools that connect each step of care." centered />
           <div className="product-grid">
             {products.map((product, index) => (
               <article className="product-card" key={product.slug}>
                 <div className={`product-card-art product-art-${(index % 4) + 1}`}>
                   {product.slug === "health-atm"
-                    ? <img className="product-card-image" src="https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2Fyper-kiosk-front.webp&w=384&q=75" alt="YPER CarePod health screening kiosk concept." loading="lazy" />
+                    ? <img className="product-card-image" src={media.carePod} alt="YPER CarePod health screening kiosk concept." loading="lazy" />
                     : <AbstractVisual variant={`product-visual-${index}`} />}
                   <span className="product-number">0{index + 1}</span>
                 </div>
                 <div className="product-card-body">
                   <p className="eyebrow">{product.audience}</p>
                   <h3>{product.name}</h3>
-                  <p>{product.description}. Detailed product information is awaiting confirmation.</p>
+                  <p>{product.description}</p>
                   <Link className="text-link" to={`/products/${product.slug}`}>Learn More <span aria-hidden="true">→</span></Link>
                 </div>
               </article>
@@ -204,10 +232,10 @@ export default function Home() {
 
       <section className="ecosystem-section section-pad">
         <div className="container">
-          <SectionHeading label="A CONNECTED ECOSYSTEM" title="Many perspectives. One healthier future." copy="Yper’s intended ecosystem and partner relationships are being confirmed. We welcome conversations with organizations working to improve access to health." centered />
+          <SectionHeading label="A CONNECTED ECOSYSTEM" title="Many perspectives. One healthier future." copy="Yper connects people, clinicians, care organizations, and health technology through tools for screening and coordinated care." centered />
           <div className="ecosystem-grid">
-            {["Healthcare professionals", "Health technology", "Community organizations", "Research & innovation"].map((item, index) => (
-              <div className="ecosystem-item" key={item}><span className={`ecosystem-icon eco-${index}`}><Icon kind={["people", "pulse", "heart", "building"][index]} /></span><strong>{item}</strong><span>Potential ecosystem area</span></div>
+            {["People & communities", "Clinicians & care teams", "Hospitals & clinics", "Diagnostics & technology"].map((item, index) => (
+              <div className="ecosystem-item" key={item}><span className={`ecosystem-icon eco-${index}`}><Icon kind={["people", "pulse", "heart", "building"][index]} /></span><strong>{item}</strong><span>Connected across care</span></div>
             ))}
           </div>
           <p className="ecosystem-disclaimer">No specific partnership or customer relationship is implied.</p>
@@ -231,7 +259,7 @@ export default function Home() {
       <DemoSection />
 
       <section className="assurance-section">
-        <div className="container assurance-inner"><Icon kind="shield" /><div><strong>Security & compliance information</strong><p>Yper security practices, certifications and compliance details require confirmation. No specific certification or regulatory claim is made here.</p></div><span className="confirmation-badge">DETAILS TO CONFIRM</span></div>
+        <div className="container assurance-inner"><Icon kind="shield" /><div><strong>Security, privacy & compliance</strong><p>Read about YPER’s approach to privacy, security, and published compliance credentials.</p></div><Link className="text-link" to="/why-yper">Why YPER <span aria-hidden="true">→</span></Link></div>
       </section>
     </main>
   );

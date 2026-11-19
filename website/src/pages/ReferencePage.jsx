@@ -1,19 +1,20 @@
 import { Link } from "react-router-dom";
 import DemoForm from "../components/DemoForm.jsx";
 import { AbstractVisual } from "../components/Visuals.jsx";
+import { media } from "../data/media.js";
 
 const leaders = [
   {
     name: "Dr. Abhay Chopada",
     role: "FOUNDER & CHAIRMAN, YPER",
-    image: "https://www.yper.in/_next/image?url=%2Fimages%2Fdr-abhay-chopada.jpg&w=640&q=75",
+    image: media.founderAbhay,
     alt: "Dr. Abhay Chopada, Founder and Chairman of YPER.",
     copy: "Dr. Abhay Chopada is a consultant surgeon, healthcare executive, and health-tech entrepreneur with over 30 years of experience. He is passionate about advancing accessible, connected, and technology-driven healthcare for everyone.",
   },
   {
     name: "Sri",
     role: "FOUNDER & MANAGING DIRECTOR, YPER",
-    image: "https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2Ffounder.webp&w=640&q=75",
+    image: media.founderSri,
     alt: "Sri, Founder and Managing Director of YPER.",
     copy: "Sri leads YPER’s vision of transforming healthcare accessibility through intelligent technology and connected diagnostics. His entrepreneurial interests span healthcare, education, cybersecurity, and artificial intelligence.",
   },
@@ -45,7 +46,7 @@ const contentPages = {
   why: {
     label: "WHY YPER",
     title: "Trusted. Secure. Connected.",
-    intro: "YPER is designed so screening, privacy, and a clinician’s next step can work together. The controls below describe the approach. Exact certifications and integrations are stated only when they are confirmed.",
+    intro: "YPER brings screening, privacy, and a clinician’s next step together. Credentials and integrations are stated only where current verification supports the claim.",
     sections: [
       {
         title: "The YPER difference",
@@ -67,6 +68,17 @@ const contentPages = {
           ["Secure System Integrations", "Connections to record systems, laboratories, and devices should use authenticated interfaces approved by the organization."],
           ["AI Governance and Human Oversight", "AI features are intended to assist clinicians and operators. They do not replace professional medical judgment, and their use should remain reviewable."],
           ["Deployment and Infrastructure Security", "Cloud or on-premise deployment can be discussed according to organizational policy. The available model depends on the implementation."],
+        ],
+      },
+      {
+        title: "Security, Privacy & Compliance",
+        intro: "YPER’s published compliance credentials and attestations include:",
+        cards: [
+          ["ABDM Certified", "Ayushman Bharat Digital Mission."],
+          ["GDPR Compliant", "General Data Protection Regulation."],
+          ["HIPAA Compliant", "Health Insurance Portability and Accountability Act."],
+          ["SOC 2 Type II Attested", "Independent attestation report."],
+          ["ISO/IEC 27001:2022 Certified", "Information Security Management System standard."],
         ],
       },
       {
@@ -183,7 +195,19 @@ const legalPages = {
   },
 };
 
+const heroImages = {
+  "ABOUT YPER": [media.carePod, "YPER CarePod health screening kiosk concept.", "YPER product concept"],
+  "WHY YPER": [media.wallCarePod, "YPER wall-mounted health screening kiosk concept.", "YPER product concept"],
+  "FOR PARTNERS": [media.carePod, "YPER CarePod health screening kiosk concept.", "A configurable YPER concept"],
+  "HOSPITALS AND EMPLOYERS": [media.wallCarePod, "YPER wall-mounted health screening kiosk concept.", "A configurable YPER concept"],
+  "PILOT AND PRICING": [media.healthKit, "YPER portable health screening kit concept.", "Configuration depends on the deployment"],
+  "PILOT ENQUIRY": [media.carePod, "YPER CarePod health screening kiosk concept.", "A configurable YPER concept"],
+  CONTACT: [media.wallCarePod, "YPER wall-mounted health screening kiosk concept.", "A configurable YPER concept"],
+};
+
 function PageHero({ label, title, intro, action }) {
+  const image = heroImages[label];
+
   return (
     <section className="reference-hero">
       <div className="container reference-hero-inner">
@@ -193,7 +217,14 @@ function PageHero({ label, title, intro, action }) {
           <p className="reference-hero-copy">{intro}</p>
           {action && <div className="reference-hero-actions"><Link className="button" to={action[1]}>{action[0]} <span aria-hidden="true">→</span></Link></div>}
         </div>
-        <div className="reference-hero-art"><AbstractVisual variant="reference-visual" /></div>
+        <div className="reference-hero-art">
+          {image ? (
+            <>
+              <img className="reference-hero-image" src={image[0]} alt={image[1]} />
+              <span className="reference-image-caption">{image[2]}</span>
+            </>
+          ) : <AbstractVisual variant="reference-visual" />}
+        </div>
       </div>
     </section>
   );
@@ -216,12 +247,12 @@ function PageSection({ section }) {
 
 function ContentPage({ page }) {
   const content = contentPages[page];
-  return <main className="reference-page"><PageHero {...content} />{content.sections.map((section) => <PageSection section={section} key={section.title} />)}</main>;
+  return <main className={`reference-page reference-page-${page}`}><PageHero {...content} />{content.sections.map((section) => <PageSection section={section} key={section.title} />)}</main>;
 }
 
 function TeamPage() {
   return (
-    <main className="reference-page">
+    <main className="reference-page reference-page-team">
       <PageHero label="LEADERSHIP" title="Meet Our Leadership" intro="Building the Future of Accessible, Intelligent Healthcare." action={["About YPER", "/about"]} />
       <PageSection section={{ title: "Leadership", people: true }} />
     </main>
@@ -230,11 +261,11 @@ function TeamPage() {
 
 function RoadmapPage() {
   const items = [
-    ["YPER Mobile Unit", "A CarePod on wheels for villages, camps and outreach drives.", "https://www.yper.in/_next/image?url=%2Fimages%2Fyper%2Fmobile-medical-unit.webp&w=384&q=75", "Concept visualization of a white YPER medical van with an open clinical interior."],
+    ["YPER Mobile Unit", "A CarePod on wheels for villages, camps and outreach drives.", media.mobileUnit, "Concept visualization of a white YPER medical van with an open clinical interior."],
     ["YPER Smart Health Card", "YPER Smart Health Card is designed to provide a convenient way to identify patients and connect their healthcare information across participating hospitals, clinics, diagnostic centers, pharmacies, and other authorized healthcare providers."],
   ];
   return (
-    <main className="reference-page">
+    <main className="reference-page reference-page-roadmap">
       <PageHero label="ROADMAP" title="Roadmap" intro="Explore product concepts described in YPER's roadmap." />
       <section className="reference-section"><div className="container"><div className="reference-roadmap-grid">{items.map(([title, copy, image, alt]) => <article className="reference-roadmap-card" key={title}>{image ? <img src={image} alt={alt} loading="lazy" /> : <div className="reference-health-card" role="img" aria-label="Illustrative YPER Smart Health Card with sample details"><span>YPER SMART HEALTH CARD</span><small>CARD HOLDER</small><strong>ALEX MORGAN</strong><small>PATIENT ID</small><b>YP-DEMO-2048</b><small>ISSUED 10/26 · SAMPLE DETAILS</small></div>}<div className="reference-roadmap-copy"><h3>{title}</h3><p>{copy}</p></div></article>)}</div><div className="reference-hero-actions"><Link className="text-link" to="/products/health-atm">Explore Health ATM <span aria-hidden="true">→</span></Link></div></div></section>
     </main>
@@ -244,7 +275,7 @@ function RoadmapPage() {
 function LegalPage({ page }) {
   const content = legalPages[page];
   return (
-    <main className="reference-page">
+    <main className={`reference-page reference-page-${page}`}>
       <PageHero label={content.label} title={content.title} intro={content.intro} />
       <section className="reference-section"><div className="container reference-legal">{content.sections.map(([title, ...paragraphs]) => <section className="reference-legal-section" key={title}><h2>{title}</h2>{paragraphs.map((paragraph) => <p key={paragraph}>{title === "Contact" && paragraph.includes("contact@yper.in") ? <>Privacy questions can be sent to <a href="mailto:contact@yper.in">contact@yper.in</a>.</> : paragraph.includes("email contact@yper.in") ? <>If you have trouble using this website, email <a href="mailto:contact@yper.in">contact@yper.in</a> and describe the page and the barrier you found.</> : paragraph}</p>)}</section>)}{content.note && <p className="reference-local-note">{content.note}</p>}</div></section>
     </main>
@@ -254,7 +285,7 @@ function LegalPage({ page }) {
 function ContactPage({ pilot = false }) {
   const selectedProduct = pilot ? "YPER CarePod" : "";
   return (
-    <main className="reference-page">
+    <main className={`reference-page reference-page-${pilot ? "pilot" : "contact"}`}>
       <PageHero label={pilot ? "PILOT ENQUIRY" : "CONTACT"} title={pilot ? "Host a CarePod Pilot" : "Book a Demo"} intro={pilot ? "Tell us about the sites and the kind of pilot you want to discuss. This form is for organisations. Do not include patient health information." : "Tell us about your organisation and the kind of deployment you want to discuss. A request is sent only when this website’s delivery service is configured. Do not include patient health information."} />
       <section className="reference-section"><div className="container reference-contact-layout"><div className="reference-contact-details"><p>Use a work email so the right team can reply.</p><p>Choose a country code with the phone number.</p><p>Pricing and device support are confirmed in the conversation, not on this form.</p><a href="mailto:contact@yper.in">contact@yper.in</a><p>H.No. 2-4-1033, Plot No. 8,<br />Samathapuri Colony,<br />Road No. 1, New Nagole Colony,<br />Kothapet Road, Hyderabad – 500035,<br />Telangana, India.</p><a href="https://www.google.com/maps/search/?api=1&query=H.No.%202-4-1033%2C%20Plot%20No.%208%2C%20Samathapuri%20Colony%2C%20Road%20No.%201%2C%20New%20Nagole%20Colony%2C%20Kothapet%20Road%2C%20Hyderabad%20500035%2C%20Telangana%2C%20India" target="_blank" rel="noreferrer">Get Directions</a></div><DemoForm selectedProduct={selectedProduct} /></div></section>
     </main>
